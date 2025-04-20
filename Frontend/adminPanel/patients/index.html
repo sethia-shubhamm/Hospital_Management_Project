@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients Management | Hospital Management System</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="/signUp/images/logo.png" alt="Hospital Logo" class="logo-img"> <span style="font-weight:bold;color:#3498db;">Hospital Management System</span> <span style="font-weight:bold;color:#3498db;">Hospital Management System</span>
+                <h2>HMS Admin</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="../dashboard/index.php">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../doctors/index.html">
+                            <i class="bi bi-person-badge"></i>
+                            <span>Doctors</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="index.html">
+                            <i class="bi bi-people"></i>
+                            <span>Patients</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../appointments/index.html">
+                            <i class="bi bi-calendar-check"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="/mainDashboard.html" class="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Patients Management</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search patients...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="admin-profile">
+                        <img src="/adminLogin/images/Company.png" alt="Admin Profile">
+                        <div class="profile-info">
+                            <span class="name">Admin User</span>
+                            <span class="role">System Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <div class="content-header-actions">
+                    <h2>Manage Patients</h2>
+                    <button class="btn-primary"><i class="fas fa-plus"></i> Add New Patient</button>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label>Filter by:</label>
+                        <select>
+                            <option value="">All Patients</option>
+                            <option>New Patients</option>
+                            <option>Admitted</option>
+                            <option>Outpatient</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Doctor:</label>
+                        <select>
+                            <option value="">All Doctors</option>
+                            <option>Dr. Emily Chen</option>
+                            <option>Dr. David Wilson</option>
+                            <option>Dr. Sarah Miller</option>
+                            <option>Dr. John Taylor</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter">Apply Filters</button>
+                </div>
+                
+                <div class="table-card patients-table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" class="select-all">
+                                    </th>
+                                    <th>Patient</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" class="select-row"></td>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">JS</div>
+                                            <div>
+                                                <span class="user-name">James Smith</span>
+                                                <span class="user-email">james.smith@example.com</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>42</td>
+                                    <td>Male</td>
+                                    <td>+1 (555) 123-4567</td>
+                                    <td><span class="status confirmed">Admitted</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="select-row"></td>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">EJ</div>
+                                            <div>
+                                                <span class="user-name">Emily Johnson</span>
+                                                <span class="user-email">emily.johnson@example.com</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>28</td>
+                                    <td>Female</td>
+                                    <td>+1 (555) 234-5678</td>
+                                    <td><span class="status available">Outpatient</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="select-row"></td>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">RB</div>
+                                            <div>
+                                                <span class="user-name">Robert Brown</span>
+                                                <span class="user-email">robert.brown@example.com</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>65</td>
+                                    <td>Male</td>
+                                    <td>+1 (555) 345-6789</td>
+                                    <td><span class="status busy">Emergency</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="select-row"></td>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">MP</div>
+                                            <div>
+                                                <span class="user-name">Maria Parker</span>
+                                                <span class="user-email">maria.parker@example.com</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>35</td>
+                                    <td>Female</td>
+                                    <td>+1 (555) 456-7890</td>
+                                    <td><span class="status pending">Scheduled</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="select-row"></td>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">DW</div>
+                                            <div>
+                                                <span class="user-name">David Williams</span>
+                                                <span class="user-email">david.williams@example.com</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>52</td>
+                                    <td>Male</td>
+                                    <td>+1 (555) 567-8901</td>
+                                    <td><span class="status available">Outpatient</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination">
+                        <button class="pagination-btn prev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <span class="pagination-ellipsis">...</span>
+                        <button class="pagination-btn">15</button>
+                        <button class="pagination-btn next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="content-footer">
+                <p>&copy; 2024 Hospital Management System. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+    
+    <script src="../assets/js/dashboard.js"></script>
+</body>
+</html> 

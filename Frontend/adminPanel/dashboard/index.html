@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Hospital Management System</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="/signUp/images/logo.png" alt="Hospital Logo" class="logo"> <span style="font-weight:bold;color:#3498db;">Hospital Management System</span> <span style="font-weight:bold;color:#3498db;">Hospital Management System</span>
+                <h3>Admin Panel</h3>
+            </div>
+            
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="/adminPanel/dashboard/index.html">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/adminPanel/doctors/index.html">
+                        <i class="bi bi-person-badge"></i>
+                        <span>Doctors</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/adminPanel/patients/index.html">
+                        <i class="bi bi-people"></i>
+                        <span>Patients</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/adminPanel/appointments/index.html">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Appointments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/adminPanel/reports/index.html">
+                        <i class="bi bi-bar-chart"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/adminPanel/settings/index.html">
+                        <i class="bi bi-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="/mainDashboard.html" class="logout">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button type="button" id="sidebarCollapse" class="btn">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <h1>Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <button><i class="bi bi-search"></i></button>
+                    </div>
+                    <div class="admin-profile">
+                        <img src="/adminLogin/images/Company.png" alt="Admin Profile">
+                        <div class="profile-info">
+                            <span class="name">Admin User</span>
+                            <span class="role">System Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <!-- Overview Cards -->
+                <section class="overview-cards">
+                    <div class="card doctors-card">
+                        <div class="card-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Doctors</h3>
+                            <span class="value">42</span>
+                            <span class="change positive">+3 this month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card patients-card">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Patients</h3>
+                            <span class="value">1,248</span>
+                            <span class="change positive">+28 this week</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card appointments-card">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Appointments</h3>
+                            <span class="value">156</span>
+                            <span class="change positive">+12 today</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card revenue-card">
+                        <div class="card-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Revenue</h3>
+                            <span class="value">$25,680</span>
+                            <span class="change positive">+8% this month</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Statistics Chart -->
+                <section class="statistics-section">
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>Hospital Statistics</h3>
+                            <div class="controls">
+                                <select>
+                                    <option>This Week</option>
+                                    <option>This Month</option>
+                                    <option>This Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <!-- Chart would be rendered here with a JS library -->
+                                <div class="placeholder-text">Chart visualization would appear here</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Recent Activity -->
+                <section class="recent-activities">
+                    <div class="activity-card">
+                        <div class="card-header">
+                            <h3>Recent Activities</h3>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon doctor">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <p>Dr. John Smith added to Cardiology department</p>
+                                    <span class="time">2 hours ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon patient">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <p>New patient Emily Johnson registered</p>
+                                    <span class="time">3 hours ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon appointment">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <p>18 new appointments scheduled for tomorrow</p>
+                                    <span class="time">5 hours ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon system">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <p>System maintenance completed successfully</p>
+                                    <span class="time">Yesterday</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="dashboard-tables">
+                    <!-- Recent Appointments -->
+                    <div class="table-card">
+                        <div class="card-header">
+                            <h3>Recent Appointments</h3>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Doctor</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">JS</div>
+                                                <span>James Smith</span>
+                                            </div>
+                                        </td>
+                                        <td>Dr. Emily Chen</td>
+                                        <td>Apr 15, 2024</td>
+                                        <td>09:30 AM</td>
+                                        <td><span class="status confirmed">Confirmed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">LJ</div>
+                                                <span>Lisa Johnson</span>
+                                            </div>
+                                        </td>
+                                        <td>Dr. David Wilson</td>
+                                        <td>Apr 15, 2024</td>
+                                        <td>10:15 AM</td>
+                                        <td><span class="status pending">Pending</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">RB</div>
+                                                <span>Robert Brown</span>
+                                            </div>
+                                        </td>
+                                        <td>Dr. Sarah Miller</td>
+                                        <td>Apr 15, 2024</td>
+                                        <td>11:00 AM</td>
+                                        <td><span class="status confirmed">Confirmed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">MP</div>
+                                                <span>Maria Parker</span>
+                                            </div>
+                                        </td>
+                                        <td>Dr. John Taylor</td>
+                                        <td>Apr 16, 2024</td>
+                                        <td>09:00 AM</td>
+                                        <td><span class="status cancelled">Cancelled</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Doctor Availability -->
+                    <div class="table-card">
+                        <div class="card-header">
+                            <h3>Doctor Availability</h3>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Doctor</th>
+                                        <th>Department</th>
+                                        <th>Status</th>
+                                        <th>Next Available</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">EC</div>
+                                                <span>Dr. Emily Chen</span>
+                                            </div>
+                                        </td>
+                                        <td>Cardiology</td>
+                                        <td><span class="status available">Available</span></td>
+                                        <td>Today, 2:00 PM</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">DW</div>
+                                                <span>Dr. David Wilson</span>
+                                            </div>
+                                        </td>
+                                        <td>Neurology</td>
+                                        <td><span class="status busy">In Surgery</span></td>
+                                        <td>Tomorrow, 10:00 AM</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">SM</div>
+                                                <span>Dr. Sarah Miller</span>
+                                            </div>
+                                        </td>
+                                        <td>Pediatrics</td>
+                                        <td><span class="status available">Available</span></td>
+                                        <td>Today, 3:30 PM</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar">JT</div>
+                                                <span>Dr. John Taylor</span>
+                                            </div>
+                                        </td>
+                                        <td>Orthopedics</td>
+                                        <td><span class="status unavailable">On Leave</span></td>
+                                        <td>April 20, 9:00 AM</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <footer class="content-footer">
+                <p>&copy; 2024 Hospital Management System. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+    
+    <script src="../assets/js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html> 

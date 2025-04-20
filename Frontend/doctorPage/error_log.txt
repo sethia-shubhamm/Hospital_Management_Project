@@ -1,0 +1,15 @@
+[2025-04-20 22:54:58] Running duplicate check: SELECT * FROM Appointments 
+                             WHERE DoctorID = '2' 
+                             AND AppointmentDate = '2025-04-20' 
+                             AND AppointmentTime = '02:26'
+[2025-04-20 22:54:58] Running insert query: INSERT INTO Appointments (
+        DoctorID, 
+        PatientID, 
+        AppointmentDate, 
+        AppointmentTime, 
+        AppointmentPurpose) VALUES (
+        '2',
+        '6',
+        '2025-04-20',
+        '02:26',
+        'dhh')

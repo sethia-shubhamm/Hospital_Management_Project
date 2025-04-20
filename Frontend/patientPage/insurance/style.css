@@ -1,0 +1,129 @@
+.insurance-card {
+    background-color: #f8f9fa;
+    border-left: 4px solid #7260ff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.insurance-details {
+    display: flex;
+    gap: 30px;
+}
+
+.insurance-item {
+    margin-bottom: 10px;
+}
+
+.insurance-item label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.insurance-item p {
+    font-weight: 500;
+    margin: 0;
+}
+
+.no-insurance {
+    color: #dc3545;
+    font-style: italic;
+}
+
+.bills-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.bills-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.bills-table th {
+    background-color: #f5f5f5;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 2px solid #ddd;
+}
+
+.bills-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.bills-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.no-data {
+    text-align: center;
+    padding: 30px 20px;
+    color: #777;
+    font-style: italic;
+}
+
+.content-area {
+    margin-top: -37px;
+}
+
+.welcome-section {
+    margin-top: 10px;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    padding: 15px 20px;
+}
+
+.card-title {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #555;
+}
+
+.btn-primary {
+    background-color: #7260ff;
+    border-color: #7260ff;
+}
+
+.btn-primary:hover {
+    background-color: #5a4ad9;
+    border-color: #5a4ad9;
+}
+
+.alert {
+    border-radius: 8px;
+    margin-bottom: 20px;
+}

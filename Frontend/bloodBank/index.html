@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Blood Bank | Hospital Management System</title>
+</head>
+<body>
+    <div class="desktop">
+        <div class="navbar">
+            <div class="logo">
+                <img src="images/logo.png" alt=""> 
+                <h6 style="margin-top: 7.5px;"> Seattle Grace Hospital</h6>
+            </div>
+            <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="../index.php">HOME</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/allDoctors">ALL DOCTORS</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="/bloodBank">BLOOD BANK</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/contact">CONTACT</a>
+                </li>
+            </ul>
+            <div class="login">
+                <a href="/login"><button type="button" class="btn btn-primary">Login</button></a>
+                <a href="/signUp"><button type="button" class="btn btn-primary">Sign Up</button></a>
+            </div>
+        </div>
+        
+        <div class="main-container">
+            <div class="blood-bank-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="donate">Donate Blood</button>
+                    <button class="tab-btn" data-tab="receive">Receive Blood</button>
+                    <button class="tab-btn" data-tab="inventory">Blood Inventory</button>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Donate Blood Tab -->
+                    <div id="donate" class="tab-pane active">
+                        <div class="blood-header">
+                            <div class="icon-container">
+                                <i class="fas fa-hand-holding-medical"></i>
+                            </div>
+                            <h1>Donate Blood</h1>
+                            <p>Your donation can save lives. Fill the form below to schedule a blood donation.</p>
+                        </div>
+                        
+                        <form class="blood-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="donor-name">Full Name</label>
+                                    <input type="text" id="donor-name" placeholder="Enter your full name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="donor-age">Age</label>
+                                    <input type="number" id="donor-age" placeholder="Enter your age" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="donor-email">Email</label>
+                                    <input type="email" id="donor-email" placeholder="Enter your email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="donor-phone">Phone Number</label>
+                                    <input type="tel" id="donor-phone" placeholder="Enter your phone number" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="donor-blood-group">Blood Group</label>
+                                    <select id="donor-blood-group" required>
+                                        <option value="" disabled selected>Select your blood group</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="donor-date">Preferred Date</label>
+                                    <input type="date" id="donor-date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="donor-medical">Medical History (Optional)</label>
+                                <textarea id="donor-medical" placeholder="Any relevant medical history"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary submit-btn">Schedule Donation</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Receive Blood Tab -->
+                    <div id="receive" class="tab-pane">
+                        <div class="blood-header">
+                            <div class="icon-container">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <h1>Receive Blood</h1>
+                            <p>Request blood for medical purposes. Complete the form to make a request.</p>
+                        </div>
+                        
+                        <form class="blood-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="patient-name">Patient Name</label>
+                                    <input type="text" id="patient-name" placeholder="Enter patient name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="hospital-name">Hospital Name</label>
+                                    <input type="text" id="hospital-name" placeholder="Enter hospital name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="requester-email">Contact Email</label>
+                                    <input type="email" id="requester-email" placeholder="Enter contact email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="requester-phone">Contact Phone</label>
+                                    <input type="tel" id="requester-phone" placeholder="Enter contact phone" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="required-blood-group">Required Blood Group</label>
+                                    <select id="required-blood-group" required>
+                                        <option value="" disabled selected>Select required blood group</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="blood-units">Units Required</label>
+                                    <input type="number" id="blood-units" placeholder="Number of units needed" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="urgency">Urgency Level</label>
+                                <select id="urgency" required>
+                                    <option value="" disabled selected>Select urgency level</option>
+                                    <option value="emergency">Emergency - Immediate</option>
+                                    <option value="urgent">Urgent - Within 24 hours</option>
+                                    <option value="scheduled">Scheduled - Specific date</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="request-reason">Medical Reason</label>
+                                <textarea id="request-reason" placeholder="Explain the medical need for blood" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary submit-btn">Submit Request</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Blood Inventory Tab -->
+                    <div id="inventory" class="tab-pane">
+                        <div class="blood-header">
+                            <div class="icon-container">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <h1>Blood Inventory</h1>
+                            <p>Current blood supply status at our blood bank.</p>
+                        </div>
+                        
+                        <div class="inventory-container">
+                            <div class="inventory-filters">
+                                <div class="filter-group">
+                                    <label for="filter-blood-group">Filter by Blood Group</label>
+                                    <select id="filter-blood-group">
+                                        <option value="all">All Blood Groups</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="filter-group">
+                                    <label for="filter-status">Filter by Status</label>
+                                    <select id="filter-status">
+                                        <option value="all">All Status</option>
+                                        <option value="available">Available</option>
+                                        <option value="low">Low Stock</option>
+                                        <option value="critical">Critical</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="inventory-table">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Blood Group</th>
+                                            <th>Available Units</th>
+                                            <th>Last Updated</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Inventory data will be loaded here by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="blood-drives">
+                                <h2>Upcoming Blood Drives</h2>
+                                <div class="drives-container">
+                                    <div class="drive-card">
+                                        <div class="drive-date">
+                                            <span class="day">15</span>
+                                            <span class="month">APR</span>
+                                        </div>
+                                        <div class="drive-details">
+                                            <h3>Community Blood Drive</h3>
+                                            <p>Location: Main Hospital Campus</p>
+                                            <p>Time: 9:00 AM - 4:00 PM</p>
+                                        </div>
+                                        <button class="btn btn-outline">Register</button>
+                                    </div>
+                                    
+                                    <div class="drive-card">
+                                        <div class="drive-date">
+                                            <span class="day">22</span>
+                                            <span class="month">APR</span>
+                                        </div>
+                                        <div class="drive-details">
+                                            <h3>University Blood Drive</h3>
+                                            <p>Location: State University Campus</p>
+                                            <p>Time: 10:00 AM - 3:00 PM</p>
+                                        </div>
+                                        <button class="btn btn-outline">Register</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load our script file -->
+    <script src="script.js"></script>
+</body>
+</html> 

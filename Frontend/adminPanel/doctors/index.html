@@ -1,0 +1,547 @@
+<?php
+session_start();
+
+// Check if user is logged in and is an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'Admin') {
+    $_SESSION['login_error'] = "Please log in as an administrator to access this page";
+    header("Location: ../../adminLogin/index.php");
+    exit();
+}
+
+// Include database connection
+require_once '../../../db_connect.php';
+
+// Function to log errors
+function logError($message)
+{
+    $logFile = '../error_log.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$timestamp] $message" . PHP_EOL, FILE_APPEND);
+}
+
+// Check if Doctors table exists
+$tableCheck = mysqli_query($conn, "SHOW TABLES LIKE 'Doctors'");
+if (mysqli_num_rows($tableCheck) == 0) {
+    logError("Doctors table does not exist");
+    // Create Doctors table
+    $createDoctorsTable = "CREATE TABLE Doctors (
+        DoctorID INT AUTO_INCREMENT PRIMARY KEY,
+        LoginID INT,
+        DoctorName VARCHAR(100) NOT NULL,
+        Email VARCHAR(100),
+        Phone VARCHAR(20),
+        Specialty VARCHAR(50),
+        Qualification VARCHAR(100),
+        JoinDate DATE,
+        Status VARCHAR(20) DEFAULT 'Active'
+    )";
+    
+    if (!mysqli_query($conn, $createDoctorsTable)) {
+        logError("Failed to create Doctors table: " . mysqli_error($conn));
+    }
+}
+
+// Get all doctors
+$doctorsQuery = "SELECT * FROM Doctors ORDER BY DoctorID DESC";
+$doctorsResult = mysqli_query($conn, $doctorsQuery);
+
+if (!$doctorsResult) {
+    logError("Failed to fetch doctors: " . mysqli_error($conn));
+}
+
+// Get specialties for filter dropdown
+$specialtiesQuery = "SELECT DISTINCT Specialty FROM Doctors WHERE Specialty IS NOT NULL AND Specialty != ''";
+$specialtiesResult = mysqli_query($conn, $specialtiesQuery);
+$specialties = [];
+
+if ($specialtiesResult) {
+    while ($row = mysqli_fetch_assoc($specialtiesResult)) {
+        if (!empty($row['Specialty'])) {
+            $specialties[] = $row['Specialty'];
+        }
+    }
+} else {
+    logError("Failed to fetch specialties: " . mysqli_error($conn));
+}
+
+// If no specialties found in database, provide default list
+if (empty($specialties)) {
+    $specialties = [
+        'Cardiology',
+        'Neurology',
+        'Orthopedics',
+        'Pediatrics',
+        'Oncology',
+        'Dermatology',
+        'General Medicine'
+    ];
+}
+
+// Handle doctor status updates via AJAX
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
+    $doctorId = mysqli_real_escape_string($conn, $_POST['doctor_id']);
+    $newStatus = mysqli_real_escape_string($conn, $_POST['status']);
+    
+    $updateQuery = "UPDATE Doctors SET Status = '$newStatus' WHERE DoctorID = '$doctorId'";
+    $updateResult = mysqli_query($conn, $updateQuery);
+    
+    if ($updateResult) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'message' => mysqli_error($conn)]);
+    }
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors Management | Hospital Management System</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles for add doctor modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 700px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .form-group {
+            flex: 0 0 50%;
+            padding: 0 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .required-field::after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .status-dropdown {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .status-active {
+            color: green;
+        }
+
+        .status-leave {
+            color: orange;
+        }
+
+        .status-inactive {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="/signUp/images/logo.png" alt="Hospital Logo" class="logo-img"> <span style="font-weight:bold;color:#3498db;">Hospital Management System</span> <span style="font-weight:bold;color:#3498db;">Hospital Management System</span>
+                <h2>HMS Admin</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="../dashboard/index.php">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="index.php">
+                            <i class="bi bi-person-badge"></i>
+                            <span>Doctors</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../patients/index.html">
+                            <i class="bi bi-people"></i>
+                            <span>Patients</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../appointments/index.html">
+                            <i class="bi bi-calendar-check"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="../../logout.php" class="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Doctors Management</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="doctorSearch" placeholder="Search doctors...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="admin-profile">
+                        <img src="/adminLogin/images/Company.png" alt="Admin Profile">
+                        <div class="profile-info">
+                            <span class="name">Admin User</span>
+                            <span class="role">System Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <div class="content-header-actions">
+                    <h2>Manage Doctors</h2>
+                    <button class="btn-primary" id="openAddDoctorModal"><i class="fas fa-plus"></i> Add New Doctor</button>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label>Department:</label>
+                        <select id="specialtyFilter">
+                            <option value="">All Departments</option>
+                            <?php foreach($specialties as $specialty): ?>
+                                <option value="<?php echo htmlspecialchars($specialty); ?>"><?php echo htmlspecialchars($specialty); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="On Leave">On Leave</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter" id="applyFilters">Apply Filters</button>
+                </div>
+                
+                <div class="table-card doctors-table">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" class="select-all">
+                                    </th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Specialization</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doctorTableBody">
+                                <?php if ($doctorsResult && mysqli_num_rows($doctorsResult) > 0): ?>
+                                    <?php while($doctor = mysqli_fetch_assoc($doctorsResult)): ?>
+                                        <?php
+                                        $initials = '';
+                                        $nameParts = explode(' ', $doctor['DoctorName']);
+                                        foreach($nameParts as $part) {
+                                            $initials .= strtoupper(substr($part, 0, 1));
+                                        }
+                                        $initials = substr($initials, 0, 2);
+                                        
+                                        $statusClass = 'available';
+                                        if (isset($doctor['Status'])) {
+                                            if ($doctor['Status'] == 'On Leave') {
+                                                $statusClass = 'unavailable';
+                                            } elseif ($doctor['Status'] == 'Inactive') {
+                                                $statusClass = 'busy';
+                                            }
+                                        }
+                                        ?>
+                                        <tr data-specialty="<?php echo htmlspecialchars($doctor['Specialty'] ?? ''); ?>" data-status="<?php echo htmlspecialchars($doctor['Status'] ?? 'Active'); ?>">
+                                            <td><input type="checkbox" class="select-row"></td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <div class="user-avatar"><?php echo $initials; ?></div>
+                                                    <div>
+                                                        <span class="user-name"><?php echo htmlspecialchars($doctor['DoctorName']); ?></span>
+                                                        <span class="user-email"><?php echo htmlspecialchars($doctor['Email'] ?? 'No email provided'); ?></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($doctor['Specialty'] ?? 'Not specified'); ?></td>
+                                            <td><?php echo htmlspecialchars($doctor['Qualification'] ?? 'Not specified'); ?></td>
+                                            <td><?php echo htmlspecialchars($doctor['Phone'] ?? 'Not provided'); ?></td>
+                                            <td>
+                                                <select class="status-dropdown <?php echo $statusClass; ?>" data-doctor-id="<?php echo $doctor['DoctorID']; ?>">
+                                                    <option value="Active" <?php echo (!isset($doctor['Status']) || $doctor['Status'] == 'Active') ? 'selected' : ''; ?> class="status-active">Active</option>
+                                                    <option value="On Leave" <?php echo (isset($doctor['Status']) && $doctor['Status'] == 'On Leave') ? 'selected' : ''; ?> class="status-leave">On Leave</option>
+                                                    <option value="Inactive" <?php echo (isset($doctor['Status']) && $doctor['Status'] == 'Inactive') ? 'selected' : ''; ?> class="status-inactive">Inactive</option>
+                                                </select>
+                                            </td>
+                                            <td class="actions">
+                                                <button class="action-btn edit" data-id="<?php echo $doctor['DoctorID']; ?>"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" data-id="<?php echo $doctor['DoctorID']; ?>"><i class="fas fa-trash"></i></button>
+                                                <button class="action-btn view" data-id="<?php echo $doctor['DoctorID']; ?>"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7" style="text-align: center;">No doctors found. Add your first doctor!</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination">
+                        <button class="pagination-btn prev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <span class="pagination-ellipsis">...</span>
+                        <button class="pagination-btn">10</button>
+                        <button class="pagination-btn next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="content-footer">
+                <p>&copy; 2024 Hospital Management System. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+    
+    <!-- Add Doctor Modal -->
+    <div id="addDoctorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModal">&times;</span>
+            <div class="modal-header">
+                <h3>Add New Doctor</h3>
+            </div>
+            <form id="addDoctorForm" action="process_doctor.php" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="doctorName" class="form-label required-field">Doctor Name</label>
+                        <input type="text" id="doctorName" name="doctorName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label required-field">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="specialty" class="form-label">Specialty/Department</label>
+                        <select id="specialty" name="specialty" class="form-control">
+                            <option value="">Select Specialty</option>
+                            <?php foreach($specialties as $specialty): ?>
+                                <option value="<?php echo htmlspecialchars($specialty); ?>"><?php echo htmlspecialchars($specialty); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="qualification" class="form-label">Qualification</label>
+                        <input type="text" id="qualification" name="qualification" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label required-field">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="status" class="form-label">Status</label>
+                        <select id="status" name="status" class="form-control">
+                            <option value="Active" selected>Active</option>
+                            <option value="On Leave">On Leave</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-secondary" id="cancelAdd">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Doctor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        // Doctor Modal Functionality
+        const modal = document.getElementById('addDoctorModal');
+        const openModalBtn = document.getElementById('openAddDoctorModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelAdd');
+        
+        openModalBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+        
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Doctor Filtering
+        const specialtyFilter = document.getElementById('specialtyFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        const doctorSearch = document.getElementById('doctorSearch');
+        const doctorRows = document.querySelectorAll('#doctorTableBody tr');
+        
+        function applyFilters() {
+            const specialty = specialtyFilter.value.toLowerCase();
+            const status = statusFilter.value;
+            const searchText = doctorSearch.value.toLowerCase();
+            
+            doctorRows.forEach(row => {
+                const rowSpecialty = row.getAttribute('data-specialty').toLowerCase();
+                const rowStatus = row.getAttribute('data-status');
+                const rowText = row.textContent.toLowerCase();
+                
+                const matchesSpecialty = !specialty || rowSpecialty.includes(specialty);
+                const matchesStatus = !status || rowStatus === status;
+                const matchesSearch = !searchText || rowText.includes(searchText);
+                
+                if (matchesSpecialty && matchesStatus && matchesSearch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        applyFiltersBtn.addEventListener('click', applyFilters);
+        doctorSearch.addEventListener('keyup', applyFilters);
+        
+        // Status dropdown change handler
+        const statusDropdowns = document.querySelectorAll('.status-dropdown');
+        statusDropdowns.forEach(dropdown => {
+            dropdown.addEventListener('change', function() {
+                const doctorId = this.getAttribute('data-doctor-id');
+                const newStatus = this.value;
+                
+                // Remove all status classes
+                this.classList.remove('status-active', 'status-leave', 'status-inactive');
+                
+                // Add appropriate class based on new status
+                if (newStatus === 'Active') {
+                    this.classList.add('status-active');
+                } else if (newStatus === 'On Leave') {
+                    this.classList.add('status-leave');
+                } else if (newStatus === 'Inactive') {
+                    this.classList.add('status-inactive');
+                }
+                
+                // Update the row's data attribute
+                this.closest('tr').setAttribute('data-status', newStatus);
+                
+                // Send AJAX request to update status
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'index.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        // Success handling if needed
+                    } else {
+                        console.error('Status update failed');
+                    }
+                };
+                xhr.send(`action=update_status&doctor_id=${doctorId}&status=${newStatus}`);
+            });
+        });
+    </script>
+</body>
+</html> 
